@@ -93,11 +93,12 @@ Created By : Mohamed El Sayed
 
 **1- enable_duplication**
 
-    If this variable = `false` you will get error when you try to add an existing id to the database
-    set it to true to allow this process
+- If this variable = `false` you will get error when you try to add an existing id to the database set it to true to allow this process
+    
     **enable_duplication = false by default**
     
 **2- id, name, address**
 
-    The value of this variables added to the database when `addNew` function is called
+
+- The value of this variables added to the database when `addNew` function is called
     
