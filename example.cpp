@@ -28,7 +28,7 @@ int main(int argc, char** argv)
 	char confirm[1];
 	SDatabase db;
 	db.createDB("db.txt");
-	db.enable_multi=true;
+	db.enable_duplication=true;
 	string id, name, address;
 	do{
 	clearScreen();
