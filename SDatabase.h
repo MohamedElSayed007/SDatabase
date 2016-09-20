@@ -25,7 +25,7 @@ void writer(string);
 string dbName;
 
 public:
-bool enable_multi = false;
+bool enable_duplication = false;
 bool exists(const string);
 string id, name, address;
 void createDB(string);
