@@ -69,7 +69,7 @@ bool SDatabase::addNew()
 			{
 				return false;
 			}
-		if(enable_multi==true)
+		if(enable_duplication==true)
 		{
 
 			string data = id+'%'+name+'%'+address+';';
@@ -77,7 +77,7 @@ bool SDatabase::addNew()
 			name=""; id=""; address="";
 			return true;
 		}
-		else if(enable_multi==false)
+		else if(enable_duplication==false)
 		{
 			if(exists(id)==true)
 				return false;
