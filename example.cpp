@@ -1,12 +1,10 @@
 /*
  * Usage example for SDatabase class
  *
- *  Created On : Sep 20, 2016
  *      Author : Mohamed El Sayed
- *      email : engmohamedelsayed007@gmail.com
+ *      email  : m.elsayed4420@gmail.com
  *      lowlevelcode.blogspot.com
  */
-
 
 
 #include <iostream>
@@ -14,6 +12,7 @@
 #include <cstdlib>
 
 using namespace std;
+
 void clearScreen()
 {
 #ifdef _WIN32
@@ -24,59 +23,80 @@ void clearScreen()
 }
 int main(int argc, char** argv)
 {
+	// Initializing and creating db object from SDatabase class
+	SDatabase db;
+	//Set the database entries to 5, Maximum is 20
+	db.entry_count = 5;
+	//Creating text file to be our database called database.txt
+	db.createDB("database.txt");
+	//Disable duplication, addNew() function will check for the existence of the id, it it exists the function will return false
+	//and abort adding
+	db.enable_duplication=false;
+
+	//local variables
 	char input[1];
 	char confirm[1];
-	SDatabase db;
-	db.createDB("db.txt");
-	db.enable_duplication=true;
-	string id, name, address;
+	string id;
+
+
+	//String array to inform the user what to enter, 5 string for 5 d atabase entries
+	string printed_msgs[]={"Enter ID : ", "Enter Name : ", "Enter Address : ", "Enter Age : ", "Enter Gender : "};
+
 	do{
 	clearScreen();
 	cout<<"1-Add\n2-Delete By ID\n3-Search By ID\n4-View All\n5-Clear Database\n6-Exit\n";
 	cout<<"\nYour Choice >> ";
+	//Get input from the user
 	cin.getline(input, 20);
 
 	if(input[0]=='1')
 	{
 		do{
 			clearScreen();
-			cout<<"Enter the user ID : ";
-			getline(cin, id);
-			db.id=id;
-			cout<<"Enter the user Name : ";
-			getline(cin, name);
-			db.name = name;
-			cout<<"Enter the user address : ";
-			getline(cin, address);
-			db.address = address;
-			if(db.addNew()==true)
+			//Loop from 0 to the number of entries selected, each time print a message from printed_msgs array
+			//and read input and save it into db.entries[i];
+			//Note the the first input must be the id
+			for(int i = 0; i < db.entry_count; i++)
 			{
-				cout<<"Done\n";
+				cout<<printed_msgs[i];
+				getline(cin, db.entries[i]);
 			}
-			else{
-			cout<<"\nAn error occurred\nPress any key to continue\n";
-			cin.ignore();
+			//If the function returned false, print error message
+			if(db.addNew()==false)
+			{
+				cout<<"An error occurred\n";
+				cin.ignore();
+				break;
 			}
-			cout<<"Add more [y/n] ? ";
-			cin.getline(confirm, 20);
-		}
+			else
+			{
+				cout<<"Done\nAdd more [y/n] ? ";
+				cin.getline(confirm, 20);
+			}
+
+		  }
 		while(tolower(confirm[0])=='y');
 	}
 	else if(input[0]=='2')
 	{
 	do{
 		clearScreen();
+		//Ask the use to enter the id he wants to delete
 		cout<<"Enter the user ID : ";
 		getline(cin, id);
+		//If the id exists, Delete its row data
 		if(db.deleteById(id)==true)
 			{
 				cout<<endl<<"Done\nDelete more [y/n] ? ";
 				cin.getline(confirm, 20);
 			}
 		else
-			cout<<"An error occurred\n";
+		{
+			//If not, print error message, you can change it for something like "ID not found", you are free
+			cout<<"An error occurred\nDelete more [y/n] ?";
+			cin.getline(confirm, 20);
+		}
 
-		cin.ignore();
 	  }
 	  while(tolower(confirm[0])=='y');
 	}
@@ -84,32 +104,41 @@ int main(int argc, char** argv)
 	{
 		do
 		{
+			//Ask the user to enter the id that he wants to search about
 			clearScreen();
 			cout<<"Enter the user ID : ";
 			getline(cin, id);
+			//If the id exists, Print its row data
+			//If not print the following message
 			if(db.searchById(id)==false)
-				cout<<"ID not found\n";
+			{
+				cout<<"ID not found\nSearch again [y/n] ? ";
+				cin.getline(confirm, 20);
+			}
 			else
 			{
+				//If the result is true, Ask the user if he wants to search again
 				cout<<"\nSearch again [y/n] ? ";
 				cin.getline(confirm, 20);
 			}
-			cin.ignore();
 		}
 		while(tolower(confirm[0]=='y'));
 	}
 	else if(input[0]=='4')
 	{
 		clearScreen();
+		//If the returned value greater than 0, Print the whole db data, if below then the database is empty
 		if(db.viewAll()< 0)
 		{
 			cout<<"Database is empty\n";
 		}
+
 		cout<<"Press enter to continue.";
 		cin.ignore();
 	}
 	else if(input[0]=='5')
 	{
+		//Simply, Clears the database data by calling clear() function
 		clearScreen();
 		cout << "Are you sure [y/n] ? ";
 		cin.getline(confirm, 20);
