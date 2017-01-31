@@ -1,9 +1,8 @@
 /*
  * SDatabase.cpp
  *
- *  Created on: Jan 22, 2015
  *      Author: Mohamed El Sayed
- *      email : engmohamedelsayed007@gmail.com
+ *      email : m.elsayed4420@gmail.com
  *      lowlevelcode.blogspot.com
  */
 
@@ -12,28 +11,51 @@
 
 string SDatabase::reader(const string path)
 {
-	ifstream read;
-	string text;
-	read.open(path.c_str());
-	if(read.is_open())
+
+	if(check_db_init()==false && first_time == true)
 	{
-		while(!read.eof())
-		{
-			getline(read,text);
-		}
-		read.close();
+		cout<<"SDatabase.creatDB function is not initialized, SDatabase will generate a file called sdb_d.txt and use it as a database.\n";
+		first_time = false;
 	}
+		ifstream read;
+			string text;
+			read.open(path.c_str());
+			if(read.is_open())
+			{
+				while(!read.eof())
+				{
+					getline(read,text);
+				}
+
+				read.close();
+			}
 
 		return text;
 }
 
 void SDatabase::createDB(string dbName_)
 {
-	string text = reader(dbName_);
+	ifstream read;
+
+	string text;
+	read.open(dbName_.c_str());
+	if(read.is_open())
+	{
+		while(!read.eof())
+		{
+			getline(read,text);
+		}
+
+		read.close();
+	}
+
+
+	//string text = reader(dbName_);
 	ofstream write;
 	write.open(dbName_.c_str());
 	write<<text;
 	write.close();
+
 
 	dbName = dbName_;
 }
@@ -59,37 +81,45 @@ void SDatabase::writer(string data)
 
 bool SDatabase::addNew()
 {
-	if((name=="") || (id == "") || (address == ""))
-	{
-		return false;
-	}
+		string data, temp;
 
-		string temp = id+name+address;
+		for(int loop = 0; loop < entry_count; loop++)
+		{
+			temp = temp+entries[loop];
+		}
 		if((temp.find(';')!=string::npos) || (temp.find('%')!=string::npos))
-			{
+		{
 				return false;
-			}
+		}
 		if(enable_duplication==true)
 		{
-
-			string data = id+'%'+name+'%'+address+';';
+			for(int i = 0; i < entry_count; i++)
+			{
+				data = data+entries[i]+'%';
+			}
+			data=data+';';
 			writer(data);
-			name=""; id=""; address="";
+
 			return true;
 		}
 		else if(enable_duplication==false)
 		{
-			if(exists(id)==true)
+			if(exists(entries[0])==true)
 				return false;
 			else
 			{
-				string data = id+'%'+name+'%'+address+';';
+				for(int i = 0; i < entry_count; i++)
+				{
+					data = data+entries[i]+'%';
+				}
+
+				data=data+';';
 				writer(data);
-				name=""; id=""; address="";
+
 				return true;
 			}
 		}
-
+		delete [] entries;
 }
 
 int SDatabase::viewAll()
@@ -112,7 +142,7 @@ else
 		colon = data.find(';', colon);
 
 		if(colon == string::npos)
-			rows.push_back(data.substr(i, data.length()));
+			rows.push_back(data.substr(i, data.length()));	
 	}
 	for(unsigned int rows_count = 0; rows_count < rows.size(); rows_count ++)
 	{
@@ -201,4 +231,12 @@ void SDatabase::clear()
 	clear << "";
 	clear.close();
 
+}
+
+bool SDatabase::check_db_init()
+{
+	if(dbName=="sdb_d.txt")
+		return false;
+	else
+		return true;
 }
