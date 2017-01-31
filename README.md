@@ -9,11 +9,11 @@ Created By : Mohamed El Sayed
 
 - Arguments :
 
-    A string contains the id that you want to know if it exists or not
+    A string contains the id that you want to know if it exists or not.
     
 - Return type :
 
-    `exists` returns a boolean value, `true` if the id exists. `false` if not
+    `exists` returns a boolean value, `true` if the id exists. `false` if not.
     
 
 
@@ -21,11 +21,13 @@ Created By : Mohamed El Sayed
 
   - Arguments :
   
-    A string with the name of the text file aka database you want to load
+    A string with the name of the text file aka database you want to load.
     
   **NOTE :** 
 
-    `createDB` must be initialized in order to supply the class with the name of the database to process
+    `createDB` must be initialized in order to supply the class with the name of the database to process.
+    
+    If `createDB` is not initialized, the class will create a default database called `sdb_d.txt` or will load it if it already exists.
     
   - Return type : 
       
@@ -35,9 +37,12 @@ Created By : Mohamed El Sayed
 **3- addNew**
 
   - Arguments :
-  
-    `addNew` Has no direct arguments, it adds what stored in these variables `id`, `name`, `address` to the database so these variables must be initialized with a non-empty value
-
+    `addNew` has no direct arguments. In earlier versions, it was limited to add only 3 variables to the database (the row can't contain more than 3 columns). But now, the function is completly re-coded.
+    
+    It allows the user to add any number of data per row, just set the number of the required entries to `entry_count` variable (the maximum is 20) and you are ready to go.
+    
+    Add the data to `entries` array using a loop and it will do the work (look at the example).
+     
   - Return type : 
       
     `addNew` returns `true` if the addition successeded, `false` if any problem detected
@@ -96,9 +101,3 @@ Created By : Mohamed El Sayed
 - If this variable = `false` you will get error when you try to add an existing id to the database set it to true to allow this process
     
     **enable_duplication = false by default**
-    
-**2- id, name, address**
-
-
-- The value of this variables added to the database when `addNew` function is called
-    
