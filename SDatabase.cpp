@@ -50,7 +50,6 @@ void SDatabase::createDB(string dbName_)
 	}
 
 
-	//string text = reader(dbName_);
 	ofstream write;
 	write.open(dbName_.c_str());
 	write<<text;
